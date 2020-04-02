@@ -67,7 +67,9 @@ export default {
       currentType: "pop",
       isShowBackTop: false,
       tabOffsetTop: 0,
-      isTabFixed: false
+      isTabFixed: false,
+      savedY: 0,
+      itemImgListener: null
     };
   },
   computed: {
@@ -87,9 +89,20 @@ export default {
   mounted() {
     // 图片加载事件监听
     const refresh = this.debounce(this.$refs.scroll.refresh, 50);
-    this.$bus.$on("itemImageLoad", () => {
-      refresh();
-    });
+
+    this.itemImgListener = () => {refresh();}
+    this.$bus.$on("itemImageLoad", this.itemImgListener);
+  },
+  activated() {
+    this.$refs.scroll.scrollTo(0, this.savedY, 0);
+    this.$refs.scroll.refresh();
+    this.$bus.$on("itemImageLoad", this.itemImgListener);
+  },
+
+  deactivated() {
+    this.savedY = this.$refs.scroll.getScrollY()
+
+    this.$bus.off('itemImgLoad', this.itemImgListener)
   },
 
   methods: {
