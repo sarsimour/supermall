@@ -24,7 +24,7 @@
         @tabClick="tabClick"
         ref="tabControl1"
       />
-      <good-list :goods="showGoods" />
+      <goods-list :goods="showGoods" />
     </scroll>
     <back-top @click.native="backClick" v-show="isShowBackTop" />
   </div>
@@ -35,9 +35,11 @@ import HomeSwiper from "./childComps/HomeSwiper";
 import RecommendView from "./childComps/RecommendView";
 import FeatureView from "./childComps/FeatureView";
 
+import {itemListenerMixin} from 'common/mixin';
+
 import NavBar from "components/common/navbar/NavBar";
 import TabControl from "components/content/tabControl/TabControl";
-import GoodList from "components/content/goods/GoodsList";
+import GoodsList from "components/content/goods/GoodsList";
 import Scroll from "components/common/scroll/Scroll";
 import BackTop from "components/content/backTop/BackTop";
 
@@ -51,10 +53,11 @@ export default {
     FeatureView,
     NavBar,
     TabControl,
-    GoodList,
+    GoodsList,
     Scroll,
     BackTop
   },
+  mixins: [itemListenerMixin],
   data() {
     return {
       banners: [],
@@ -69,7 +72,6 @@ export default {
       tabOffsetTop: 0,
       isTabFixed: false,
       savedY: 0,
-      itemImgListener: null
     };
   },
   computed: {
@@ -86,13 +88,7 @@ export default {
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
   },
-  mounted() {
-    // 图片加载事件监听
-    const refresh = this.debounce(this.$refs.scroll.refresh, 50);
 
-    this.itemImgListener = () => {refresh();}
-    this.$bus.$on("itemImageLoad", this.itemImgListener);
-  },
   activated() {
     this.$refs.scroll.scrollTo(0, this.savedY, 0);
     this.$refs.scroll.refresh();
@@ -102,7 +98,7 @@ export default {
   deactivated() {
     this.savedY = this.$refs.scroll.getScrollY()
 
-    this.$bus.off('itemImgLoad', this.itemImgListener)
+    this.$bus.$off('itemImgLoad', this.itemImgListener)
   },
 
   methods: {
@@ -110,17 +106,7 @@ export default {
      * 事件监听相关的方法
      */
 
-    // 防抖函数
-    debounce(func, delay) {
-      let timer = null
 
-      return function (...args) {
-        if (timer) clearTimeout(timer)
-        timer = setTimeout(() => {
-          func.apply(this, args)
-        }, delay)
-      }
-    },
 
     tabClick(index) {
       switch (index) {

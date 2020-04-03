@@ -33,6 +33,7 @@
 <script>
 import Scroll from "components/common/scroll/Scroll";
 import { getDetail, getRecommend, Goods, Shop, GoodsParam } from "network/detail";
+import {itemListenerMixin} from 'common/mixin';
 
 import DetailNavBar from "./childComps/DetailNavBar";
 import DetailSwiper from "./childComps/DetailSwiper";
@@ -56,6 +57,7 @@ export default {
     DetailCommentInfo,
     DetailRecommendInfo
   },
+  mixins: [itemListenerMixin],
   data() {
     return {
       id: null,
@@ -65,7 +67,7 @@ export default {
       detailInfo: {},
       paramInfo: {},
       commentInfo: {},
-      recommendList: []
+      recommendList: [],
     };
   },
   created() {
@@ -78,6 +80,8 @@ export default {
     imageLoad() {
       this.$refs.scroll.refresh();
     },
+
+
 
     _getDetailData() {
       // 1.获取iid
