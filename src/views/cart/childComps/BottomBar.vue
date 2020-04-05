@@ -39,10 +39,9 @@ export default {
     },
     selected: function() {
       const cartList = this.$store.getters.cartList;
-      return cartList
-        .filter(item => {
-          return item.checked;
-        }).length;
+      return cartList.filter(item => {
+        return item.checked;
+      }).length;
     }
   },
   methods: {

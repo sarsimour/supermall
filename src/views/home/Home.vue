@@ -73,6 +73,7 @@ export default {
       tabOffsetTop: 0,
       isTabFixed: false,
       savedY: {pop: 0, new: 0, sell: 0},
+      loadevent: 'itemImageLoad'
     };
   },
   computed: {

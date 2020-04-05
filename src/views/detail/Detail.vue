@@ -88,7 +88,8 @@ export default {
       commentInfo: {},
       recommendList: [],
       themeTops: [],
-      getOffsetTops: null
+      getOffsetTops: null,
+      loadevent: 'itemImageLoad'
     };
   },
   created() {
