@@ -1,5 +1,6 @@
 import { debounce } from "common/utils";
 
+
 export const itemListenerMixin = {
   data() {
     return {
@@ -13,5 +14,20 @@ export const itemListenerMixin = {
       refresh();
     };
     this.$bus.$on("itemImageLoad", this.itemImgListener);
+  }
+};
+
+
+export const backTopMixin = {
+  data: function () {
+    return {
+      showBackTop: false
+    }
+  },
+
+  methods: {
+    mbackTop: function () {
+      this.$refs.scroll.scrollTo(0, 0, 300);
+    }
   }
 };

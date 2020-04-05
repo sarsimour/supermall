@@ -62,6 +62,7 @@ export default {
     return {
       banners: [],
       recommends: [],
+      indtype: {0: 'pop', 1: 'new', 2: 'sell'},
       goods: {
         pop: { page: 0, list: [] },
         new: { page: 0, list: [] },
@@ -71,7 +72,7 @@ export default {
       isShowBackTop: false,
       tabOffsetTop: 0,
       isTabFixed: false,
-      savedY: 0,
+      savedY: {pop: 0, new: 0, sell: 0},
     };
   },
   computed: {
@@ -90,13 +91,14 @@ export default {
   },
 
   activated() {
-    this.$refs.scroll.scrollTo(0, this.savedY, 0);
     this.$refs.scroll.refresh();
+    this.$refs.scroll.scrollTo(0, this.savedY[this.currentType], 0);
+
     this.$bus.$on("itemImageLoad", this.itemImgListener);
   },
 
   deactivated() {
-    this.savedY = this.$refs.scroll.getScrollY()
+    this.savedY[this.currentType] = this.$refs.scroll.getScrollY()
 
     this.$bus.$off('itemImgLoad', this.itemImgListener)
   },
@@ -109,20 +111,31 @@ export default {
 
 
     tabClick(index) {
-      switch (index) {
-        case 0:
-          this.currentType = "pop";
-          break;
-        case 1:
-          this.currentType = "new";
-          break;
-        case 2:
-          this.currentType = "sell";
-          break;
+
+      // 切换时记录旧类型的滚动位置
+      if (this.indtype[index] != this.currentType) {
+        this.savedY[this.currentType] = this.$refs.scroll.getScrollY();
+        this.currentType = this.indtype[index];
       }
-      this.$refs.tabControl1.currentIndex = index
-      this.$refs.tabControl2.currentIndex = index
+      
+      // switch (index) {
+      //   case 0:
+      //     this.currentType = "pop";
+      //     this.savedY[this.currentType] = this.$refs.scroll.getScrollY();
+      //     break;
+      //   case 1:
+      //     this.currentType = "new";
+      //     this.savedY[this.currentType] = this.$refs.scroll.getScrollY();
+      //     break;
+      //   case 2:
+      //     this.currentType = "sell";
+      //     this.savedY[this.currentType] = this.$refs.scroll.getScrollY();
+      //     break;
+      // }
+      this.$refs.tabControl1.currentIndex = index;
+      this.$refs.tabControl2.currentIndex = index;
       // this.$refs.scroll.scrollTo(0, -this.tabOffsetTop);
+      this.$refs.scroll.scrollTo(0, this.savedY[this.currentType]);
     },
     backClick() {
       this.$refs.scroll.scrollTo(0, 0);
