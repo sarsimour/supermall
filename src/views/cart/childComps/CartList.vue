@@ -24,7 +24,6 @@ export default {
   },
   methods: {
     refresh() {
-      console.log(this.$refs.scroll.refresh);
       this.$refs.scroll.refresh()
     }
   },

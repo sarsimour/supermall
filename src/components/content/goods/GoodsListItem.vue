@@ -1,6 +1,6 @@
 <template>
   <div class="goods-item" @click="goToDetail">
-    <img :src="getImg" alt="" @load="imageLoad" />
+    <img v-lazy="getImg" alt="" @load="imageLoad" />
     <div class="goods-info">
       <p>{{ goodsItem.title }}</p>
       <span class="price">{{ goodsItem.price }}</span>
@@ -38,7 +38,7 @@ export default {
     $route() {
       const tmp = this.$route.path.split("/");
       if (tmp[1] == 'detail' &&  !this.emitroute) {
-        console.log('detailchange now')
+        // console.log('detailchange now')
         this.emitroute = true;
         this.$bus.$emit("detailChange");
       }

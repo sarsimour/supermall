@@ -41,7 +41,6 @@
     },
 
       cartImageLoad() {
-        console.log('img loaded')
         this.$emit('cartItemImageLoad');
       }
     }

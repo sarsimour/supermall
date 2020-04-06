@@ -34,6 +34,7 @@
     </scroll>
     <detail-bottom-bar @addToCart="addToCart" />
     <back-top @click.native="mbackTop" v-show="showBackTop"> </back-top>
+    <toast :message="toastMessage" :show="showToast" />
   </div>
 </template>
 
@@ -60,6 +61,7 @@ import DetailCommentInfo from "./childComps/DetailCommentInfo";
 import DetailRecommendInfo from "./childComps/DetailRecommendInfo";
 import DetailBottomBar from "./childComps/DetailBottomBar";
 import BackTop from "components/content/backTop/BackTop";
+import Toast from "components/common/toast/Toast";
 
 export default {
   name: "Detail",
@@ -74,7 +76,8 @@ export default {
     DetailCommentInfo,
     DetailRecommendInfo,
     DetailBottomBar,
-    BackTop
+    BackTop,
+    Toast
   },
   mixins: [itemListenerMixin, backTopMixin],
   data() {
@@ -89,7 +92,9 @@ export default {
       recommendList: [],
       themeTops: [],
       getOffsetTops: null,
-      loadevent: 'itemImageLoad'
+      loadevent: 'itemImageLoad',
+      toastMessage: '',
+      showToast: false
     };
   },
   created() {
@@ -120,7 +125,15 @@ export default {
       obj.desc = this.goods.desc;
       obj.newPrice = this.goods.nowPrice;
       // 3.添加到Store中
-      this.$store.commit("addCart", obj);
+      this.$store.dispatch("addCartAction", obj).then(
+        res => {
+          this.toastMessage = res;
+          this.showToast = true;
+          setTimeout(() => {
+            this.showToast = false
+            this.toastMessage = ''
+          }, 1500);
+          });
     },
 
     contentScroll(position) {

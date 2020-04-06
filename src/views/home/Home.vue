@@ -115,7 +115,7 @@ export default {
 
       // 切换时记录旧类型的滚动位置
       if (this.indtype[index] != this.currentType) {
-        this.savedY[this.currentType] = this.$refs.scroll.getScrollY();
+        this.savedY[this.currentType] = Math.min(this.$refs.scroll.getScrollY(), -this.tabOffsetTop);
         this.currentType = this.indtype[index];
       }
       
@@ -151,6 +151,7 @@ export default {
     },
     swiperImageLoad() {
       this.tabOffsetTop = this.$refs.tabControl1.$el.offsetTop;
+      this.savedY = {pop: -this.tabOffsetTop, new: -this.tabOffsetTop, sell: -this.tabOffsetTop};
     },
     /**
      * 网络请求相关的方法
